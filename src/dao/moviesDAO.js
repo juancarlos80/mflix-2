@@ -180,8 +180,9 @@ export default class MoviesDAO {
     const queryPipeline = [
       matchStage,
       sortStage,
-      // TODO Ticket: Faceted Search
-      // Add the stages to queryPipeline in the correct order.
+      skipStage,
+      limitStage,
+      facetStage      
     ]
 
     try {
@@ -233,7 +234,7 @@ export default class MoviesDAO {
       console.error(`Unable to issue find command, ${e}`)
       return { moviesList: [], totalNumMovies: 0 }
     }
-    
+
     // TODO Ticket: Paging
     // Use the cursor to only return the movies that belong on the current page
     const displayCursor = cursor
