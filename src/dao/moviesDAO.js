@@ -182,7 +182,7 @@ export default class MoviesDAO {
       sortStage,
       skipStage,
       limitStage,
-      facetStage      
+      facetStage
     ]
 
     try {
@@ -273,13 +273,39 @@ export default class MoviesDAO {
 
       // TODO Ticket: Get Comments
       // Implement the required pipeline.
-      const pipeline = [
+      const pipeline =
+      [
         {
-          $match: {
-            _id: ObjectId(id)
+          '$match': {
+            '_id': new ObjectId(id)
+          }
+        },
+        {
+          '$lookup': {
+            'from': 'comments',
+            'let': {
+              'id': '$_id'
+            },
+            'pipeline': [
+              {
+                '$match': {
+                  '$expr': {
+                    '$eq': [
+                      '$movie_id', '$$id'
+                    ]
+                  }
+                }
+              }, {
+                '$sort': {
+                  'date': -1
+                }
+              }
+            ],
+            'as': 'comments'
           }
         }
       ]
+
       return await movies.aggregate(pipeline).next()
     } catch (e) {
       /**
