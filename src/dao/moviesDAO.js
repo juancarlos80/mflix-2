@@ -314,11 +314,14 @@ export default class MoviesDAO {
       Handle the error that occurs when an invalid ID is passed to this method.
       When this specific error is thrown, the method should return `null`.
       */
-
+      console.log( "Error format: ", e );
+      if( e.toString().indexOf("12 bytes or a string of 24 hex characters") > 0 ){
+        return null;
+      }
       // TODO Ticket: Error Handling
       // Catch the InvalidId error by string matching, and then handle it.
-      console.error(`Something went wrong in getMovieByID: ${e}`)
-      throw e
+      //console.error(`Something went wrong in getMovieByID: ${e.errmsg}`)
+      //throw e
     }
   }
 }
